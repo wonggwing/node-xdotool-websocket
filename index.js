@@ -12,7 +12,7 @@ io.on("connection", socket => {
     mouseClick(bmask);
   });
 });
-io.listen(3000);
+io.listen(6901);
 
 var bash = cp.spawn("bash");
 global.x = 0;
