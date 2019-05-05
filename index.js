@@ -1,9 +1,12 @@
 const cp = require("child_process");
 const io = require("socket.io")();
+var bash = cp.spawn("bash");
+
 io.on("connection", socket => {
   console.log("client connected");
   socket.on("m", (x, y) => {
-    mouseMoveRelative(x, y);
+    /// mouseMoveRelative(x, y);
+	bash.stdin.write(`xdotool mousemove_relative -- ${x} ${y}\n`);
   });
   socket.on("d", bmask => {
     mouseDown(bmask);
@@ -12,24 +15,32 @@ io.on("connection", socket => {
     mouseClick(bmask);
   });
 });
-io.listen(6901);
+io.listen(3000);
 
-var bash = cp.spawn("bash");
+/*
 global.x = 0;
 global.y = 0;
-setInterval(function() {
+
+const mouseMoveInterval = 32;
+global.mouseMoveIntervalFunction = null;
+function callMouseMove() {
   if (x !== 0 || y !== 0) {
     // console.log(x, y);
     bash.stdin.write(`xdotool mousemove_relative -- ${x} ${y}\n`);
     x = y = 0;
   }
-}, 32);
+  mouseMoveIntervalFunction = null;
+}
 
 function mouseMoveRelative(x, y) {
   global.x += x;
   global.y += y;
   // bash.stdin.write(`xdotool mousemove_relative -- ${x} ${y}\n`);
+  //if ( mouseMoveIntervalFunction === null ){
+  //	mouseMoveIntervalFunction = setTimeout(callMouseMove, mouseMoveInterval);
+  //}
 }
+*/
 
 bash.on("error", function(code) {
   console.log("error with code " + code);
